@@ -5,7 +5,7 @@
 include ("Console/Getopt.php");
 
 $VERSION="1.1";
-$AUTHOR="(c) 2012 Jack-Benny Persson (jack-benny@cyberinfo.se)";
+$AUTHOR="(c) 2013 Jack-Benny Persson (jack-benny@cyberinfo.se)";
 
 // Exit codes 
 $STATE_OK=0;
@@ -44,7 +44,7 @@ Options:
 --md5 md5checksum
    Set the MD5 checksum for the file set by --file
 EOD;
-	// Print the help
+// Print the help
 	print_version();
 	echo "$AUTHOR\n";
 	echo "\n$HELP_TEXT\n";
@@ -73,6 +73,7 @@ if(sizeof($opts) > 0)
 		{
 			case 'h':
 			print_help();
+			exit ($STATE_OK);
 			break;
 
 			case 'V':
@@ -95,6 +96,17 @@ if(sizeof($opts) > 0)
 	}
 }
 
+if (empty($filename))
+{
+	fwrite(STDERR,"A filename is requierd\n");
+	exit($STATE_UNKNOWN);
+}
+
+if (empty($md5))
+{
+	fwrite(STDERR,"You need to enter an MD5 checksum\n");
+	exit($STATE_UNKNOWN);
+}
 $file = md5_file($filename);
 
 if ($file == $md5)
