@@ -53,7 +53,7 @@ EOD;
 $options = new Console_Getopt();
 
 $shortoptions = "hV";
-$longoptions = array("warning", "file", "md5");
+$longoptions = array("warning", "file=", "md5");
 
 $args = $options->readPHPArgv();
 $ret = $options->getopt($args, $shortoptions, $longoptions);
@@ -77,6 +77,11 @@ if(sizeof($opts) > 0)
 
 			case 'V':
 			print_version();
+			break;
+
+			case '--file':
+			$filename = $o[1];
+			echo $filename . "\n";
 			break;
 		}
 	}
