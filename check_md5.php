@@ -53,7 +53,7 @@ EOD;
 $options = new Console_Getopt();
 
 $shortoptions = "hV";
-$longoptions = array("warning", "file=", "md5");
+$longoptions = array("warning", "file=", "md5=");
 
 $args = $options->readPHPArgv();
 $ret = $options->getopt($args, $shortoptions, $longoptions);
@@ -83,13 +83,26 @@ if(sizeof($opts) > 0)
 			$filename = $o[1];
 			echo $filename . "\n";
 			break;
+
+			case '--md5':
+			$md5 = $o[1];
+			break;
+
+			case '--warning':
+			echo "";
+			break;
 		}
 	}
 }
 
-$file = 'fil';
-echo md5_file($file);
+$file = md5_file($filename);
 
+if ($file == $md5)
+{
+	echo "They match\n";
+}
+echo $file;
+echo "\n\n";
 ?>
 
 
