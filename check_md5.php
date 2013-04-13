@@ -1,5 +1,9 @@
 #!/usr/bin/php5
 <?php
+
+//include class file
+include ("Console/Getopt.php");
+
 $VERSION="1.1";
 $AUTHOR="(c) 2012 Jack-Benny Persson (jack-benny@cyberinfo.se)";
 
@@ -21,7 +25,7 @@ function print_version()
 function print_help()
 {
 	global $AUTHOR;
-$HELP_TEXT = <<<'EOD'
+	$HELP_TEXT = <<<'EOD'
 Monitor the MD5 checksum of a single file
 
 Options:
@@ -40,13 +44,46 @@ Options:
 --md5 md5checksum
    Set the MD5 checksum for the file set by --file
 EOD;
-// Print the help
+	// Print the help
 	print_version();
 	echo "$AUTHOR\n";
 	echo "\n$HELP_TEXT\n";
 }
 
-print_help();
+$options = new Console_Getopt();
+
+$shortoptions = "hV";
+$longoptions = array("warning", "file", "md5");
+
+$args = $options->readPHPArgv();
+$ret = $options->getopt($args, $shortoptions, $longoptions);
+
+if (PEAR::isError($ret)) {
+	fwrite(STDERR,$ret->getMessage() . "\n");
+   	exit ($STATE_UNKNOWN);
+}
+
+$opts = $ret[0];
+
+if(sizeof($opts) > 0)
+{
+	foreach($opts as $o)
+	{
+		switch($o[0])
+		{
+			case 'h':
+			print_help();
+			break;
+
+			case 'V':
+			print_version();
+			break;
+		}
+	}
+}
+
+$file = 'fil';
+echo md5_file($file);
 
 ?>
 
