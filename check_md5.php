@@ -56,7 +56,7 @@ function print_version()
 {
 	global $argv, $argc;
 	global $VERSION;
-	echo "$argv[0] $VERSION\n";
+	fwrite(STDOUT, "$argv[0] $VERSION\n");
 }	
 
 function print_help()
@@ -196,6 +196,8 @@ else // Fail as unknown, something went haywire
 
 // Catch all and fail with unknown state
 exit($STATE_UNKNOWN);
+
+
 ?>
 
 
