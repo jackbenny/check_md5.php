@@ -84,8 +84,9 @@ Options:
 EOD;
 // Print the help
 	print_version();
-	echo "$AUTHOR\n";
-	echo "\n$HELP_TEXT\n";
+	fwrite(STDOUT, "\n");
+	fwrite(STDOUT, "$AUTHOR\n");
+	fwrite(STDOUT, "\n$HELP_TEXT\n");
 }
 
 
@@ -98,8 +99,10 @@ $longoptions = array("warning", "file=", "md5=");
 $args = $options->readPHPArgv();
 $ret = $options->getopt($args, $shortoptions, $longoptions);
 
-if (PEAR::isError($ret)) {
-	fwrite(STDERR,$ret->getMessage() . "\n");
+if (PEAR::isError($ret)) 
+{
+	fwrite(STDERR,$ret->getMessage() . "\n\n");
+	print_help();
    	exit ($STATE_UNKNOWN);
 }
 
@@ -141,6 +144,12 @@ if(sizeof($opts) > 0)
 if (empty($filename))
 {
 	fwrite(STDERR,"A filename is requierd\n");
+	exit($STATE_UNKNOWN);
+}
+
+if (file_exists($filename) == FALSE)
+{
+	fwrite(STDERR, "File $filename does not exsist!\n");
 	exit($STATE_UNKNOWN);
 }
 
