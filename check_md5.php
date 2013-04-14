@@ -145,6 +145,9 @@ else // Fail as unknown, something went haywire
 	exit($STATE_UNKNOWN);
 }
 
+
+// Catch all and fail with unknown state
+exit($STATE_UNKNOWN);
 ?>
 
 
