@@ -38,7 +38,7 @@
 include ("Console/Getopt.php");
 
 
-$VERSION="1.1";
+$VERSION="1.0";
 $AUTHOR="(c) 2013 Jack-Benny Persson (jack-benny@cyberinfo.se)";
 
 // Exit codes 
