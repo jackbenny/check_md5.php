@@ -1,5 +1,38 @@
-#!/usr/bin/php5
+#!/usr/bin/php
 <?php
+
+/*
+
+################################################################################
+#                                                                              #
+#  Copyright (C) 2013 Jack-Benny Persson <jack-benny@cyberinfo.se>             #
+#                                                                              #
+#   This program is free software; you can redistribute it and/or modify       #
+#   it under the terms of the GNU General Public License as published by       #
+#   the Free Software Foundation; either version 2 of the License, or          #
+#   (at your option) any later version.                                        #
+#                                                                              #
+#   This program is distributed in the hope that it will be useful,            #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of             #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the              #
+#   GNU General Public License for more details.                               #
+#                                                                              #
+#   You should have received a copy of the GNU General Public License          #
+#   along with this program; if not, write to the Free Software                #
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  #
+#                                                                              #
+################################################################################
+
+###############################################################################
+#                                                                             # 
+# Nagios plugin to monitor a single files MD5 sum. In case of mismatch        #
+# the plugin exit with a CRICITAL error code. This behavior can be changed    #
+# with the --warning argument.                                                # 
+# Rewritten in PHP (depending on PEAR ConsoleGetopt.                          #
+#                                                                             #
+###############################################################################
+
+*/
 
 //include PEAR ConsoleGetopt
 include ("Console/Getopt.php");
@@ -85,6 +118,7 @@ if(sizeof($opts) > 0)
 
 			case 'V':
 			print_version();
+			exit ($STATE_OK);
 			break;
 
 			case '--file':
@@ -115,6 +149,7 @@ if (empty($md5))
 	fwrite(STDERR,"You need to enter an MD5 checksum\n");
 	exit($STATE_UNKNOWN);
 }
+
 
 // MAIN
 // Compare the file against the MD5 checksum
