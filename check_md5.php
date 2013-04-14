@@ -1,11 +1,13 @@
 #!/usr/bin/php5
 <?php
 
-//include class file
+//include PEAR ConsoleGetopt
 include ("Console/Getopt.php");
+
 
 $VERSION="1.1";
 $AUTHOR="(c) 2013 Jack-Benny Persson (jack-benny@cyberinfo.se)";
+
 
 // Exit codes 
 $STATE_OK=0;
@@ -13,8 +15,11 @@ $STATE_WARNING=1;
 $STATE_CRITICAL=2;
 $STATE_UNKNOWN=3;
 
-// Functions 
 
+// Default to critical
+$warning = "no";
+
+// Functions 
 function print_version()
 {
 	global $argv, $argc;
@@ -50,6 +55,8 @@ EOD;
 	echo "\n$HELP_TEXT\n";
 }
 
+
+// Arguments and options (depending on PEAR ConsoleGetopt)
 $options = new Console_Getopt();
 
 $shortoptions = "hV";
@@ -82,7 +89,6 @@ if(sizeof($opts) > 0)
 
 			case '--file':
 			$filename = $o[1];
-			echo $filename . "\n";
 			break;
 
 			case '--md5':
@@ -90,12 +96,14 @@ if(sizeof($opts) > 0)
 			break;
 
 			case '--warning':
-			echo "";
+			$warning = "yes";
 			break;
 		}
 	}
 }
 
+
+// Sanity checks
 if (empty($filename))
 {
 	fwrite(STDERR,"A filename is requierd\n");
@@ -107,14 +115,36 @@ if (empty($md5))
 	fwrite(STDERR,"You need to enter an MD5 checksum\n");
 	exit($STATE_UNKNOWN);
 }
+
+// MAIN
+// Compare the file against the MD5 checksum
 $file = md5_file($filename);
 
-if ($file == $md5)
+if ($file == $md5) // Checksum is ok
 {
-	echo "They match\n";
+	fwrite(STDOUT, "$filename has a corect MD5 checksum\n");
+	exit($STATE_OK);
 }
-echo $file;
-echo "\n\n";
+
+elseif ($file != $md5) // Checksum is not ok
+{
+	fwrite(STDERR, "$filename does NOT match MD5 checksum\n");
+	if ($warning == "yes") // Fail as warning
+	{
+		exit($STATE_WARNING);
+	}
+	elseif ($warning == "no") // Fail as critical
+	{
+		exit($STATE_CRITICAL);
+	}
+}
+
+else // Fail as unknown, something went haywire
+{
+	fwrite(STDERR, "Unkown state\n");
+	exit($STATE_UNKNOWN);
+}
+
 ?>
 
 
