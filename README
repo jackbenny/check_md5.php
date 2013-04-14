@@ -1,0 +1,31 @@
+check_md5.php
+
+A Nagios plugin written in PHP to check the MD5 sum of a single file. 
+In case the files MD5 change the plugin issues a critical state. This behavior 
+can be changed by using a --warning argument, so that only a warning state is 
+issued. 
+This is a re-write of my previous check_md5 that was written in Bash. The Bash
+version is more tested and should work better. I wrote this this version mainly
+as a way to practice some PHP.
+
+NOTE: For this script to work you need PEAR Console_GetoptPlus (or
+Console_Getopt). 
+See http://pear.php.net/package/Console_GetoptPlus for more information on how
+to install Console_GetoptPlus.
+
+
+Options: 
+-h 
+Print detailed help screen 
+-V 
+Print version information 
+
+--warning 
+Issue a warning state instead of a critical state in case of a MD5 failure 
+Default is critical 
+
+--file /path/to/file 
+Set which file to monitor 
+
+--md5 md5checksum 
+Set the MD5 checksum for the file set by --file 
