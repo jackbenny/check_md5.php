@@ -41,7 +41,6 @@ include ("Console/Getopt.php");
 $VERSION="1.1";
 $AUTHOR="(c) 2013 Jack-Benny Persson (jack-benny@cyberinfo.se)";
 
-
 // Exit codes 
 $STATE_OK=0;
 $STATE_WARNING=1;
@@ -82,7 +81,7 @@ Options:
 --md5 md5checksum
    Set the MD5 checksum for the file set by --file
 EOD;
-// Print the help
+// Print the help text
 	print_version();
 	fwrite(STDOUT, "\n");
 	fwrite(STDOUT, "$AUTHOR\n");
@@ -93,8 +92,8 @@ EOD;
 // Arguments and options (depending on PEAR ConsoleGetopt)
 $options = new Console_Getopt();
 
-$shortoptions = "hV";
-$longoptions = array("warning", "file=", "md5=");
+$shortoptions = "hV?";
+$longoptions = array("warning", "help", "version", "file=", "md5=");
 
 $args = $options->readPHPArgv();
 $ret = $options->getopt($args, $shortoptions, $longoptions);
@@ -115,11 +114,14 @@ if(sizeof($opts) > 0)
 		switch($o[0])
 		{
 			case 'h':
+			case '--help':
+			case '?':
 			print_help();
 			exit ($STATE_OK);
 			break;
 
 			case 'V':
+			case '--version':
 			print_version();
 			exit ($STATE_OK);
 			break;
@@ -143,7 +145,8 @@ if(sizeof($opts) > 0)
 // Sanity checks
 if (empty($filename))
 {
-	fwrite(STDERR,"A filename is requierd\n");
+	fwrite(STDERR,"No file specified\n\n");
+	print_help();
 	exit($STATE_UNKNOWN);
 }
 
@@ -155,7 +158,7 @@ if (file_exists($filename) == FALSE)
 
 if (empty($md5))
 {
-	fwrite(STDERR,"You need to enter an MD5 checksum\n");
+	fwrite(STDERR,"No MD5 sum specified\n");
 	exit($STATE_UNKNOWN);
 }
 
@@ -166,26 +169,27 @@ $file = md5_file($filename);
 
 if ($file == $md5) // Checksum is ok
 {
-	fwrite(STDOUT, "$filename has a corect MD5 checksum\n");
+	fwrite(STDOUT, "$filename - MD5 OK\n");
 	exit($STATE_OK);
 }
 
 elseif ($file != $md5) // Checksum is not ok
 {
-	fwrite(STDERR, "$filename does NOT match MD5 checksum\n");
 	if ($warning == "yes") // Fail as warning
 	{
+		fwrite(STDERR, "$filename - MD5 WARNING\n");
 		exit($STATE_WARNING);
 	}
 	elseif ($warning == "no") // Fail as critical
 	{
+		fwrite(STDERR, "$filename - MD5 CRITICAL\n");
 		exit($STATE_CRITICAL);
 	}
 }
 
 else // Fail as unknown, something went haywire
 {
-	fwrite(STDERR, "Unkown state\n");
+	fwrite(STDERR, "$filename - MD5 UNKNOWN\n");
 	exit($STATE_UNKNOWN);
 }
 
