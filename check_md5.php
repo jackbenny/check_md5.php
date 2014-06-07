@@ -1,8 +1,6 @@
 #!/usr/bin/php
 <?php
 
-/*
-
 ################################################################################
 #                                                                              #
 #  Copyright (C) 2013 Jack-Benny Persson <jack-benny@cyberinfo.se>             #
@@ -28,18 +26,13 @@
 # Nagios plugin to monitor a single files MD5 sum. In case of mismatch        #
 # the plugin exit with a CRICITAL error code. This behavior can be changed    #
 # with the --warning argument.                                                # 
-# Rewritten in PHP (depending on PEAR ConsoleGetopt.                          #
+# Rewritten in PHP.                                                           #
 #                                                                             #
 ###############################################################################
 
-*/
 
-//include PEAR ConsoleGetopt
-include ("Console/Getopt.php");
-
-
-$VERSION="1.0";
-$AUTHOR="(c) 2013 Jack-Benny Persson (jack-benny@cyberinfo.se)";
+$VERSION="2.0";
+$AUTHOR="(c) 2014 Jack-Benny Persson (jack-benny@cyberinfo.se)";
 
 // Exit codes 
 $STATE_OK=0;
@@ -89,58 +82,38 @@ EOD;
 }
 
 
-// Arguments and options (depending on PEAR ConsoleGetopt)
-$options = new Console_Getopt();
-
+// Command line parsing
 $shortoptions = "hV?";
-$longoptions = array("warning", "help", "version", "file=", "md5=");
+$longoptions = array("warning", "help", "version", "file:", "md5:");
 
-$args = $options->readPHPArgv();
-$ret = $options->getopt($args, $shortoptions, $longoptions);
+$options = getopt($shortoptions, $longoptions);
 
-if (PEAR::isError($ret)) 
+if (isset($options['h']) || isset($options['?']) || isset($options['help']))
 {
-	fwrite(STDERR,$ret->getMessage() . "\n\n");
-	print_help();
-   	exit ($STATE_UNKNOWN);
+    print_help();
+    exit ($STATE_OK);
 }
 
-$opts = $ret[0];
-
-if(sizeof($opts) > 0)
+if (isset($options['V']) || isset($options['version']))
 {
-	foreach($opts as $o)
-	{
-		switch($o[0])
-		{
-			case 'h':
-			case '--help':
-			case '?':
-			print_help();
-			exit ($STATE_OK);
-			break;
-
-			case 'V':
-			case '--version':
-			print_version();
-			exit ($STATE_OK);
-			break;
-
-			case '--file':
-			$filename = $o[1];
-			break;
-
-			case '--md5':
-			$md5 = $o[1];
-			break;
-
-			case '--warning':
-			$warning = "yes";
-			break;
-		}
-	}
+    print_version();
+    exit ($STATE_OK);
 }
 
+if (isset($options['file']))
+{
+    $filename = $options['file'];
+}
+
+if (isset($options['md5']))
+{
+    $md5 = $options['md5'];
+}
+
+if (isset($options['warning']))
+{
+    $warning = "yes";
+}
 
 // Sanity checks
 if (empty($filename))

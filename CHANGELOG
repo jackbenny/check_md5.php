@@ -1,0 +1,8 @@
+Version 2.0
+    Rewritten the entire command line parsing code to get rid of the
+    PEAR Console_GetoptPlus dependency. 
+    The script sould now be able to run out-of-the-box on most
+    machines without the need for Console_GetoptPlus.
+
+Version 1.0
+    First version released!

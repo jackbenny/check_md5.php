@@ -8,12 +8,6 @@ This is a re-write of my previous check_md5 that was written in Bash. The Bash
 version is more tested and should work better. I wrote this this version mainly
 as a way to practice some PHP.
 
-NOTE: For this script to work you need PEAR Console_GetoptPlus (or
-Console_Getopt). 
-See http://pear.php.net/package/Console_GetoptPlus for more information on how
-to install Console_GetoptPlus.
-
-
 Options: 
 -h 
 Print detailed help screen 
